@@ -21,7 +21,7 @@
 
 ### auditd_events_xml_parser.py
 
-Этот модуль парсит xml файлы созданные в резульатте работы auditd_parser.py и формирует xml файл из уникальных событий. Он нужен если скопилось несколько xml файлов и появилась необходимость объеденить их в один файл и исключить неуникальные события.
+Этот модуль парсит xml файлы созданные в резульатте работы auditd_parser.py и формирует xml файл из уникальных событий. Он нужен если скопилось несколько xml файлов и появилась необходимость объеденить их в один файл и исключить неуникальные события. Для работы требует актуализированный файл c dns именами (в качестве данных для этого файла можно брать результаты tcpdump_parser.py и выбирать нужные имена, если есть необходимость включить в финальный отчет только конкретные имена, а не все что собрал tcpdump_parser.py).   
 
 ### archive.py
 
@@ -285,3 +285,59 @@ sudo crontab -l
 ```
 
 > Подытожим: cутки напролет tcpdump анализирует и парсит трафик. Два раза в сутки на основе этого парсинга формируются xml отчеты. Раз в неделю эти отчеты архивируются и сжимаются.
+
+## Настройка файла конфигурации noc (config.py)
+
+Данный файл представляет собой хранилище переменных используемых noc.
+```
+
+from pathlib import Path
+
+"""
+Путь директории временных файлов:
+"""
+tmp = Path("/project/noc/temp")
+
+"""
+Путь директории отчетов аудита:
+"""
+xml_dir = Path("/project/noc/temp/xml")
+
+"""
+Настройки tcpdump
+"""
+# Имя сетевого интерфейса:
+interface = 'bond0'
+
+# IP-адрес источника:
+ip_src = '172.16.0.19'
+
+# Путь сохранения дамп файла tcpdump:
+dump = '/project/noc/temp/tcpdump_report'
+
+# Выражение-фильтр для условий захвата трафика tcpdump:
+filter_expression = f'"(ip src host {ip_src} and not icmp and tcp[tcpflags] & tcp-syn != 0 and tcp[tcpflags] & tcp-ack = 0) or (ip src host {ip_src} and not icmp and udp)"'
+
+"""
+Настройки tcpdump_parser
+"""
+# Результаты парсинга дампа захваченного трафика:
+dump_parse = '/project/noc/temp/tcpdump_parse'
+
+"""
+Настройки create_xml
+"""
+# Путь сохранения отчета аудита:
+from datetime import datetime
+date = datetime.now().date()
+xml_file = f'/project/noc/temp/xml/audit_events_{date}.xml'
+
+"""
+Настройки audit_events_xml_parser
+"""
+#Результат парсинга по xml файлам с отчетами аудита
+result_xml = f'/project/noc/temp/result_{date}.xml'
+
+#Источник данных по которым производится парсинг (ip)
+src_data = '/project/noc/temp/src/dns'
+```
