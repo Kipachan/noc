@@ -372,5 +372,5 @@ filter_expression = f'"(ip src host {ip_src} and not icmp and tcp[tcpflags] & tc
 
 ## P.S. P.S.
 
-В случае если применение crontab является неприемлимым, то noc можно поднять как сервис systemd, написав для него соответствующий unit.
+В случае, если применение crontab является неприемлимым, то noc можно поднять как сервис systemd, написав для него соответствующий unit.
 
