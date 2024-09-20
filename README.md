@@ -94,8 +94,8 @@
 
 ## Установка дополнительных компонентов
 
-1. Необходимо убедиться что в системе установлен auditd и tcpdump.
-2. Затем нужно подложить файл audit.rules:
+### 1. Необходимо убедиться что в системе установлен auditd и tcpdump.
+### 2. Затем нужно подложить файл audit.rules:
 ```
 cp /project/noc/files/audit.rules /etc/audit/rules.d/
 ```
@@ -114,7 +114,7 @@ sudo auditctl -l
 -a always,exit -F arch=b32 -S bind,connect,listen -F key=net
 ```
 
-3. Настроим конфигурационный файл auditd:
+### 3. Настроим конфигурационный файл auditd:
 Из основного:
 размер лог файла (1500 мегабайт) - max_log_file = 1500
 количество лог файлов (5 штук) - num_logs = 5
@@ -164,7 +164,7 @@ overflow_action = SYSLOG
 max_restarts = 10
 plugin_dir = /etc/audit/plugins.d
 ```
-4. Настроим crontab, чтобы noc работал в автоматическом режиме.
+### 4. Настроим crontab, чтобы noc работал в автоматическом режиме.
 ```
 cp /project/noc/files/root  /var/spool/cron/crontabs/
 ```
