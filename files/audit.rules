@@ -1,0 +1,20 @@
+## First rule - delete all
+-D
+
+## Increase the buffers to survive stress events.
+## Make this bigger for busy systems
+-b 819200
+
+## This determine how long to wait in burst of events
+--backlog_wait_time 60000
+
+## Set failure mode to syslog
+-f 1
+
+##Audit for Network output checker
+-a always,exit -F arch=b64 -S bind,connect,accept,listen -F key=net
+-a always,exit -F arch=b32 -S bind,connect,listen -F key=net
+
+# Exclude events
+-a always,exclude -F exe=/usr/bin/getent
+-a always,exclude -F exe=/usr/sbin/ausearch
